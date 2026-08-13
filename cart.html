@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<!-- Meta Pixel Code — Tesla Coffee Pixel ID: 973146638598008 -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '973146638598008');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>السلة والدفع - Tesla Coffee</title>
+<meta name="description" content="راجع سلة مشترياتك من Tesla Coffee وأتمّ طلبك — عرض المنتجات والكمية والسعر، رسوم الشحن، والإجمالي.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJz48cmVjdCB3aWR0aD0nMTAwJyBoZWlnaHQ9JzEwMCcgcng9JzIwJyBmaWxsPScjMEQwRDBEJy8+PHBhdGggZD0nTTI1IDQwaDQwdjI1YTIwIDIwIDAgMCAxLTIwIDIwIDIwIDIwIDAgMCAxLTIwLTIweicgZmlsbD0nbm9uZScgc3Ryb2tlPScjQzlBODRDJyBzdHJva2Utd2lkdGg9JzYnLz48cGF0aCBkPSdNNjUgNDVoOGExMCAxMCAwIDAgMSAwIDIwaC04JyBmaWxsPSdub25lJyBzdHJva2U9JyNDOUE4NEMnIHN0cm9rZS13aWR0aD0nNicvPjxsaW5lIHgxPSczMCcgeTE9JzI4JyB4Mj0nMzAnIHkyPSczNScgc3Ryb2tlPScjQzlBODRDJyBzdHJva2Utd2lkdGg9JzUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjxsaW5lIHgxPSc0MicgeTE9JzI2JyB4Mj0nNDInIHkyPSczMycgc3Ryb2tlPScjQzlBODRDJyBzdHJva2Utd2lkdGg9JzUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjxsaW5lIHgxPSc1NCcgeTE9JzI4JyB4Mj0nNTQnIHkyPSczNScgc3Ryb2tlPScjQzlBODRDJyBzdHJva2Utd2lkdGg9JzUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjwvc3ZnPg==">
+<meta name="theme-color" content="#0D0D0D">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<script src="cart.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black:    #0D0D0D;
+    --gold:     #C9A84C;
+    --gold-lt:  #E8C96A;
+    --espresso: #4A2E22;
+    --espresso-lt: #6B4534;
+    --cream:    #F5F0E8;
+    --white:    #FFFFFF;
+    --red:      #C0392B;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Tajawal', sans-serif; background: var(--black); color: var(--cream); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    width: 100%; padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(13,13,13,0.96); border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .nav-logo { font-size: 1.2rem; font-weight: 800; color: var(--gold); }
+  .nav-home {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--gold); text-decoration: none; font-size: 0.9rem; font-weight: 700;
+    border: 1px solid rgba(201,168,76,0.3); border-radius: 50px; padding: 10px 20px;
+    min-height: 40px; transition: background .2s;
+  }
+  .nav-home:hover { background: rgba(201,168,76,0.1); }
+
+  .cart-page { max-width: 720px; margin: 0 auto; padding: 120px 20px 80px; }
+  .section-eyebrow {
+    text-align: center; font-size: 0.72rem; letter-spacing: 4px;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .section-title {
+    text-align: center; font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800; color: var(--white); margin-bottom: 44px;
+  }
+
+  .cart-empty { text-align: center; padding: 60px 20px; }
+  .empty-icon { font-size: 3.5rem; margin-bottom: 18px; }
+  .cart-empty p { font-size: 1.05rem; color: rgba(245,240,232,0.7); margin-bottom: 28px; }
+  .btn-continue {
+    display: inline-block; background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+    color: var(--black); padding: 15px 36px; border-radius: 50px;
+    font-weight: 800; text-decoration: none; font-size: 1rem;
+  }
+
+  .cart-items { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+  .cart-item {
+    display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 18px; padding: 18px 20px;
+  }
+  .cart-item-name { font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .cart-item-opts { font-size: 0.8rem; color: var(--gold); margin-bottom: 4px; }
+  .cart-item-price { font-size: 0.8rem; color: rgba(245,240,232,0.5); }
+  .cart-item-qty {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.04); border-radius: 50px; padding: 6px 10px;
+  }
+  .cart-item-qty button {
+    width: 30px; height: 30px; border-radius: 50%; border: none;
+    background: rgba(201,168,76,0.15); color: var(--gold); font-size: 1.1rem; font-weight: 800;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .cart-item-qty button:hover { background: rgba(201,168,76,0.3); }
+  .cart-item-qty span { min-width: 18px; text-align: center; font-weight: 700; }
+  .cart-item-subtotal { font-size: 1rem; font-weight: 800; color: var(--gold); white-space: nowrap; }
+  .cart-item-remove {
+    width: 34px; height: 34px; border-radius: 50%; border: none;
+    background: rgba(192,57,43,0.12); color: #E74C3C; font-size: 1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .cart-item-remove:hover { background: rgba(192,57,43,0.25); }
+
+  .cart-summary {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 18px; padding: 22px 24px; margin-bottom: 32px;
+  }
+  .summary-row {
+    display: flex; justify-content: space-between; padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.94rem;
+  }
+  .summary-row:last-of-type { border-bottom: none; }
+  .summary-row span:first-child { color: rgba(245,240,232,0.6); }
+  .summary-row span:last-child { color: var(--cream); font-weight: 700; }
+  .summary-row.total { padding-top: 14px; }
+  .summary-row.total span:last-child { color: var(--gold); font-size: 1.35rem; font-weight: 800; }
+  .shipping-note { font-size: 0.8rem; color: var(--gold-lt); margin-top: 10px; text-align: center; }
+
+  .form-heading { font-size: 1.15rem; font-weight: 800; color: var(--white); margin-bottom: 20px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--gold); margin-bottom: 7px; letter-spacing: 1px; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.22);
+    border-radius: 12px; padding: 13px 16px;
+    color: var(--cream); font-family: 'Tajawal', sans-serif; font-size: 1rem;
+    outline: none; transition: border-color .3s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold); }
+  .form-group select option { background: #1a1a1a; }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .form-group input.error,
+  .form-group select.error,
+  .form-group textarea.error {
+    border-color: #E74C3C;
+    background: rgba(231,76,60,0.06);
+    animation: shake .35s ease;
+  }
+  .field-error-msg { display: none; color: #E74C3C; font-size: 0.78rem; margin-top: 6px; }
+  .field-error-msg.show { display: block; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--espresso), var(--espresso-lt));
+    color: var(--white); border: none; padding: 18px;
+    border-radius: 50px; font-family: 'Tajawal', sans-serif;
+    font-size: 1.15rem; font-weight: 800; cursor: pointer;
+    box-shadow: 0 8px 32px rgba(74,46,34,0.45);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(74,46,34,0.65); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .form-note { text-align: center; font-size: 0.78rem; color: rgba(245,240,232,0.35); margin-top: 12px; }
+
+  footer {
+    text-align: center; padding: 32px 24px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.8rem; color: rgba(245,240,232,0.3);
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .cart-page { padding: 100px 16px 60px; }
+    .cart-item { grid-template-columns: 1fr auto; grid-template-areas: "info remove" "qty subtotal"; row-gap: 12px; }
+    .cart-item-info { grid-area: info; }
+    .cart-item-remove { grid-area: remove; justify-self: end; }
+    .cart-item-qty { grid-area: qty; justify-self: start; }
+    .cart-item-subtotal { grid-area: subtotal; justify-self: end; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">TESLA COFFEE</div>
+  <a href="index.html" class="nav-home">الرئيسية</a>
+</nav>
+
+<section class="cart-page">
+  <div class="section-eyebrow">السلة والدفع</div>
+  <h1 class="section-title">سلة مشترياتك</h1>
+
+  <div id="cartEmpty" class="cart-empty" style="display:none;">
+    <div class="empty-icon">🛒</div>
+    <p>السلة فاضية دلوقتي — تصفح منتجاتنا وأضف اللي يعجبك</p>
+    <a href="index.html" class="btn-continue">تصفح المنتجات</a>
+  </div>
+
+  <div id="cartContent">
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-summary">
+      <div class="summary-row"><span>المجموع الفرعي</span><span id="cartSubtotalDisplay">—</span></div>
+      <div class="summary-row"><span>رسوم الشحن</span><span id="cartShippingDisplay">—</span></div>
+      <div class="summary-row total"><span>الإجمالي</span><span id="cartTotalDisplay">—</span></div>
+      <p class="shipping-note" id="shippingNote"></p>
+    </div>
+
+    <div class="checkout-form">
+      <h2 class="form-heading">بيانات التوصيل</h2>
+      <div class="form-group">
+        <label>الاسم الكامل</label>
+        <input type="text" id="fname" placeholder="محمد أحمد" autocomplete="name" required>
+        <div class="field-error-msg" id="fname-error">من فضلك اكتب الاسم</div>
+      </div>
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input type="tel" id="fphone" placeholder="01xxxxxxxxx" inputmode="numeric" autocomplete="tel" maxlength="11" required>
+        <div class="field-error-msg" id="fphone-error">تأكد من رقم الهاتف (11 رقم، يبدأ بـ 010 أو 011 أو 012 أو 015)</div>
+      </div>
+      <div class="form-group">
+        <label>المحافظة</label>
+        <select id="fgov">
+          <option value="">اختر المحافظة</option>
+          <option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option>
+          <option>المنصورة</option><option>طنطا</option><option>الزقازيق</option>
+          <option>بورسعيد</option><option>الإسماعيلية</option><option>السويس</option>
+          <option>الشرقية</option><option>الدقهلية</option><option>الغربية</option>
+          <option>المنوفية</option><option>البحيرة</option><option>كفر الشيخ</option>
+          <option>دمياط</option><option>أخرى</option>
+        </select>
+        <div class="field-error-msg" id="fgov-error">من فضلك اختر المحافظة</div>
+      </div>
+      <div class="form-group">
+        <label>العنوان بالتفصيل</label>
+        <textarea id="faddress" placeholder="الشارع، المنطقة، رقم المبنى..."></textarea>
+        <div class="field-error-msg" id="faddress-error">من فضلك اكتب العنوان بالتفصيل</div>
+      </div>
+      <div class="form-group">
+        <label>طريقة الدفع</label>
+        <select id="fpayment">
+          <option>الدفع عند الاستلام</option>
+          <option>إنستاباي</option>
+          <option>فودافون كاش</option>
+        </select>
+      </div>
+      <button class="submit-btn" id="submitBtn" onclick="submitCheckout()">تأكيد الطلب</button>
+      <p class="form-note">بياناتك آمنة — الدفع عند الاستلام فقط</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Tesla Coffee 2026 — <a href="https://wa.me/201117180333">واتساب</a></p>
+</footer>
+
+<script>
+  function renderCart() {
+    const cart = getCart();
+    const itemsEl = document.getElementById('cartItems');
+    const emptyEl = document.getElementById('cartEmpty');
+    const contentEl = document.getElementById('cartContent');
+
+    if (cart.length === 0) {
+      emptyEl.style.display = 'block';
+      contentEl.style.display = 'none';
+      return;
+    }
+    emptyEl.style.display = 'none';
+    contentEl.style.display = 'block';
+
+    itemsEl.innerHTML = cart.map((item, i) => {
+      const optsText = Object.values(item.options || {}).filter(Boolean).join(' · ');
+      return `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            ${optsText ? `<div class="cart-item-opts">${optsText}</div>` : ''}
+            <div class="cart-item-price">${formatEGP(item.unitPrice)} / وحدة</div>
+          </div>
+          <div class="cart-item-qty">
+            <button type="button" onclick="changeQty(${i}, -1)" aria-label="تقليل الكمية">−</button>
+            <span>${item.qty}</span>
+            <button type="button" onclick="changeQty(${i}, 1)" aria-label="زيادة الكمية">+</button>
+          </div>
+          <div class="cart-item-subtotal">${formatEGP(item.unitPrice * item.qty)}</div>
+          <button type="button" class="cart-item-remove" onclick="removeItem(${i})" aria-label="حذف من السلة">✕</button>
+        </div>
+      `;
+    }).join('');
+
+    updateSummary();
+  }
+
+  function changeQty(index, delta) {
+    const cart = getCart();
+    const newQty = cart[index].qty + delta;
+    if (newQty < 1) { removeItem(index); return; }
+    updateCartQty(index, newQty);
+    renderCart();
+  }
+
+  function removeItem(index) {
+    removeFromCart(index);
+    renderCart();
+  }
+
+  function updateSummary() {
+    const subtotal = cartSubtotal();
+    const shipping = shippingFee(subtotal);
+    const total = subtotal + shipping;
+    document.getElementById('cartSubtotalDisplay').textContent = formatEGP(subtotal);
+    document.getElementById('cartShippingDisplay').textContent = shipping === 0 ? 'مجاني' : formatEGP(shipping);
+    document.getElementById('cartTotalDisplay').textContent = formatEGP(total);
+    const note = document.getElementById('shippingNote');
+    if (subtotal > 0 && subtotal < FREE_SHIPPING_THRESHOLD) {
+      note.textContent = `أضف ${formatEGP(FREE_SHIPPING_THRESHOLD - subtotal)} كمان عشان تحصل على شحن مجاني`;
+    } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+      note.textContent = 'مبروك! طلبك يستاهل شحن مجاني 🎉';
+    } else {
+      note.textContent = '';
+    }
+  }
+
+  renderCart();
+
+  let isSubmitting = false;
+
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+      isSubmitting = false;
+      const btn = document.getElementById('submitBtn');
+      if (btn) { btn.disabled = false; btn.textContent = 'تأكيد الطلب'; }
+      renderCart();
+    }
+  });
+
+  function toWesternDigits(str) {
+    const arabicMap  = { '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9' };
+    const persianMap = { '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9' };
+    return str.replace(/[٠-٩۰-۹]/g, d => arabicMap[d] || persianMap[d] || d);
+  }
+
+  // ملاحظة: مفيش باكند متصل حالياً (Google Sheet). الطلب بيتبعت مباشرة عبر واتساب.
+  async function submitCheckout() {
+    if (isSubmitting) return;
+    const cart = getCart();
+    if (cart.length === 0) return;
+    isSubmitting = true;
+
+    const name    = document.getElementById('fname').value.trim();
+    const phone   = toWesternDigits(document.getElementById('fphone').value.trim());
+    const gov     = document.getElementById('fgov').value;
+    const address = document.getElementById('faddress').value.trim();
+    const payment = document.getElementById('fpayment').value;
+
+    ['fname','fphone','fgov','faddress'].forEach(id => {
+      document.getElementById(id).classList.remove('error');
+      document.getElementById(id + '-error').classList.remove('show');
+    });
+
+    const phoneClean = phone.replace(/[^0-9]/g, '');
+    const phoneValid = /^01[0-2,5]\d{8}$/.test(phoneClean);
+
+    const fields = [
+      { id: 'fname',    valid: !!name },
+      { id: 'fphone',   valid: !!phone && phoneValid },
+      { id: 'fgov',     valid: !!gov },
+      { id: 'faddress', valid: !!address }
+    ];
+
+    let firstInvalid = null;
+    fields.forEach(f => {
+      if (!f.valid) {
+        const el = document.getElementById(f.id);
+        el.classList.add('error');
+        document.getElementById(f.id + '-error').classList.add('show');
+        if (!firstInvalid) firstInvalid = el;
+      }
+    });
+
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      firstInvalid.focus();
+      isSubmitting = false;
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = 'جارٍ الإرسال...';
+
+    const subtotal = cartSubtotal();
+    const shipping = shippingFee(subtotal);
+    const total = subtotal + shipping;
+    const orderId = Math.floor(100000 + Math.random() * 900000);
+
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'InitiateCheckout', {
+        value: total,
+        currency: 'EGP',
+        num_items: cartCount(),
+        content_type: 'product'
+      });
+    }
+
+    const itemsText = cart.map(i => {
+      const opts = Object.values(i.options || {}).filter(Boolean).join('، ');
+      return `- ${i.name}${opts ? ' (' + opts + ')' : ''} × ${i.qty} = ${i.unitPrice * i.qty} جنيه`;
+    }).join('\n');
+
+    const waMessage =
+      `طلب جديد #${orderId}\n\n` +
+      `${itemsText}\n\n` +
+      `المجموع الفرعي: ${subtotal} جنيه\n` +
+      `الشحن: ${shipping === 0 ? 'مجاني' : shipping + ' جنيه'}\n` +
+      `الإجمالي: ${total} جنيه\n\n` +
+      `الاسم: ${name}\n` +
+      `الهاتف: ${phone}\n` +
+      `المحافظة: ${gov}\n` +
+      `العنوان: ${address}\n` +
+      `الدفع: ${payment}\n` +
+      `المصدر: ${getAdSource()}`;
+    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waMessage), '_blank');
+
+    // نخزن ملخص الطلب عشان صفحة الشكر تعرضه بالتفصيل، وبعدين نفضي السلة
+    sessionStorage.setItem('lastOrder', JSON.stringify({
+      id: orderId, items: cart, subtotal, shipping, total
+    }));
+    clearCart();
+
+    window.location.href = 'thank-you.html?id=' + orderId;
+  }
+
+  ['fname','fphone','fgov','faddress'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      el.classList.remove('error');
+      document.getElementById(id + '-error').classList.remove('show');
+    });
+    el.addEventListener('change', () => {
+      el.classList.remove('error');
+      document.getElementById(id + '-error').classList.remove('show');
+    });
+  });
+</script>
+</body>
+</html>
