@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /thank-you.html
+Disallow: /cart.html
+Disallow: /en/thank-you.html
+Disallow: /en/cart.html
 
 Sitemap: https://tesla-coffee.com/sitemap.xml

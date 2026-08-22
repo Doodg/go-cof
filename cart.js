@@ -5,8 +5,9 @@
 (function () {
   const CART_KEY = 'tesla_cart_v1';
   window.WHATSAPP_NUMBER = '201117180333';
-  window.FREE_SHIPPING_THRESHOLD = 600;
-  window.SHIPPING_FEE = 60; // رسوم شحن ثابتة للطلبات تحت حد الشحن المجاني — عدّل الرقم لو الرسوم الفعلية مختلفة
+  window.FREE_SHIPPING_THRESHOLD = 700;
+  window.SHIPPING_FEE = 70; // رسوم شحن ثابتة للقاهرة والجيزة تحت حد الشحن المجاني
+  window.FREE_SHIPPING_GOVS = ['cairo', 'giza']; // الشحن المجاني متاح بس للقاهرة والجيزة
 
   function getCart() {
     try {
@@ -71,13 +72,16 @@
     return getCart().reduce((sum, i) => sum + i.qty * i.unitPrice, 0);
   }
 
-  function shippingFee(subtotal) {
+  // بترجع رقم (رسوم الشحن) لو المحافظة القاهرة أو الجيزة، أو null لو المحافظة غيرهم
+  // (يعني الرسوم لسه مش معروفة وهيتم تأكيدها مع العميل بعدين على واتساب).
+  function shippingFee(subtotal, govCode) {
     if (subtotal <= 0) return 0;
+    if (window.FREE_SHIPPING_GOVS.indexOf(govCode) === -1) return null;
     return subtotal >= window.FREE_SHIPPING_THRESHOLD ? 0 : window.SHIPPING_FEE;
   }
 
   function formatEGP(n) {
-    return Math.round(n).toLocaleString('ar-EG') + ' جنيه';
+    return 'LE ' + Number(n).toFixed(2);
   }
 
   function updateCartBadge() {
@@ -112,7 +116,7 @@
     document.head.appendChild(style);
   }
 
-  function showToast(message, withCartLink) {
+  function showToast(message, withCartLink, linkText) {
     ensureToastStyles();
     let toast = document.getElementById('cartToast');
     if (!toast) {
@@ -121,7 +125,7 @@
       toast.className = 'cart-toast';
       document.body.appendChild(toast);
     }
-    toast.innerHTML = message + (withCartLink ? ' — <a href="cart.html">اذهب للسلة</a>' : '');
+    toast.innerHTML = message + (withCartLink ? ' — <a href="cart.html">' + (linkText || 'اذهب للسلة') + '</a>' : '');
     // إعادة تشغيل الأنيميشن لو التوست ظاهر بالفعل
     toast.classList.remove('show');
     void toast.offsetWidth;
