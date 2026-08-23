@@ -244,6 +244,10 @@ src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
 
   renderCart();
 
+  // وقت تحميل الصفحة — بنقارنه بوقت إرسال الطلب عشان نكتشف طلبات بتتبعت فوراً
+  // من غير ما حد يقرأ الصفحة فعلاً (سكريبت بيبعت مباشرة للـ API من غير ما يفتح الموقع أصلاً).
+  const __pageLoadedAt = Date.now();
+
   let isSubmitting = false;
 
   window.addEventListener('pageshow', function (event) {
@@ -385,6 +389,7 @@ src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
             pageLang: "ar",
             source: getAdSource(),
             website: honeypot,
+            elapsedMs: Date.now() - __pageLoadedAt,
             fbp, fbc,
             pageUrl: window.location.href
           }),
