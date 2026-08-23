@@ -96,6 +96,10 @@ src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
         <input type="text" id="fname" placeholder="John Smith" autocomplete="name" required>
         <div class="field-error-msg" id="fname-error">Please enter your name</div>
       </div>
+      <div style="position:absolute; left:-9999px; top:-9999px; opacity:0; height:0; width:0; overflow:hidden;" aria-hidden="true">
+        <label for="fwebsite">Website</label>
+        <input type="text" id="fwebsite" name="website" tabindex="-1" autocomplete="off">
+      </div>
       <div class="form-group">
         <label>Phone Number</label>
         <input type="tel" id="fphone" placeholder="01xxxxxxxxx" inputmode="numeric" autocomplete="tel" maxlength="11" required>
@@ -270,6 +274,8 @@ src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
     const govOther = document.getElementById('fgovOther').value.trim();
     const address  = document.getElementById('faddress').value.trim();
     const payment  = "Cash on Delivery";
+    // حقل فخ (Honeypot) — مخفي عن العملاء الحقيقيين، لو اتملى معناه إن اللي بيبعت بوت
+    const honeypot = document.getElementById('fwebsite').value.trim();
 
     ['fname','fphone','fgov','fgovOther','faddress'].forEach(id => {
       document.getElementById(id).classList.remove('error');
@@ -378,6 +384,7 @@ src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
             name, phone, gov: govText, address, payment,
             pageLang: "en",
             source: getAdSource(),
+            website: honeypot,
             fbp, fbc,
             pageUrl: window.location.href
           }),
