@@ -346,7 +346,54 @@ src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
       `Address: ${address}\n` +
       `Payment: ${payment}\n` +
       `Source: ${getAdSource()}`;
-    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waMessage), '_blank');
+
+    // الطريقة الأساسية: تسجيل الأوردر في Google Sheet. لو نجحت، الطلب يتسجل بهدوء
+    // من غير ما نفتح واتساب. مهلة قصوى 12 ثانية — لو حصل تأخير أو حجب (Adblocker
+    // وغيره)، ما ينفعش نسيب العميل واقف على "جارٍ الإرسال" للأبد.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
+    const { fbp, fbc } = getFbParams();
+
+    let sheetSaveFailed = false;
+    const sheetUrl = "https://script.google.com/macros/s/AKfycbxaJ4Yp-xetzBJt79Wjms4t8N9_n2WAtqHYkwY5BgqrIMemqt2mAmpniZNFuddUBLRZBg/exec";
+    if (!sheetUrl.startsWith('http')) {
+      // لسه معملتش Deploy لـ Google Apps Script (شوف apps-script.gs) — نروح على واتساب مباشرة
+      sheetSaveFailed = true;
+      clearTimeout(timeoutId);
+    } else {
+      try {
+        await fetch(sheetUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            token: "acc597d93d84103ed0c5e87bf1f5481eed6548fc315c31ff00750071a5e2f58a",
+            timestamp: new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' }),
+            orderId,
+            items: itemsText,
+            numItems: cartCount(),
+            subtotal,
+            shipping: shipping === null ? "To be confirmed" : shipping,
+            total,
+            name, phone, gov: govText, address, payment,
+            pageLang: "en",
+            source: getAdSource(),
+            fbp, fbc,
+            pageUrl: window.location.href
+          }),
+          signal: controller.signal
+        });
+      } catch (e) {
+        // فشل التسجيل (Adblocker أو مشكلة شبكة) — هنفتح واتساب كخطة بديلة عشان الطلب ميضيعش
+        sheetSaveFailed = true;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    if (sheetSaveFailed) {
+      window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waMessage), '_blank');
+    }
 
     sessionStorage.setItem('lastOrder', JSON.stringify({
       id: orderId, items: cart, subtotal, shipping, total

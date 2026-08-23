@@ -147,7 +147,25 @@
     return ref;
   }
 
+  // بيانات مطابقة Meta (fbp/fbc) — بتتبعت مع الطلب لجوجل شيت، والسكريبت بيستخدمها
+  // لبعت حدث Purchase من السيرفر لـ Meta Conversions API (Meta CAPI).
+  function getCookie(name) {
+    const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return match ? decodeURIComponent(match.pop()) : '';
+  }
+
+  function getFbParams() {
+    const fbp = getCookie('_fbp');
+    let fbc = getCookie('_fbc');
+    if (!fbc) {
+      const fbclid = new URLSearchParams(window.location.search).get('fbclid');
+      if (fbclid) fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+    }
+    return { fbp, fbc };
+  }
+
   window.getAdSource = getAdSource;
+  window.getFbParams = getFbParams;
   window.getCart = getCart;
   window.addToCart = addToCart;
   window.removeFromCart = removeFromCart;
