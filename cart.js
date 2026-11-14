@@ -164,8 +164,43 @@
     return { fbp, fbc };
   }
 
+  // معرّف فريد لكل حدث (AddToCart / InitiateCheckout) — بيتبعت نفسه للبيكسل في
+  // المتصفح وللسيرفر (Meta CAPI) عشان Meta تعتبرهم نفس الحدث ومتعدّش مرتين.
+  function generateEventId() {
+    if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+    return 'evt_' + Date.now() + '_' + Math.random().toString(16).slice(2);
+  }
+
+  // بتبعت حدث (AddToCart/InitiateCheckout) من السيرفر مباشرة لـ Meta Conversions API،
+  // بالتوازي مع بيكسل المتصفح، عشان الحدث يتسجل حتى لو العميل عنده Adblocker.
+  // إرسال "صامت": مش بتستخدم await ومش بتبوّظ تجربة المستخدم لو فشلت أو تأخرت.
+  const CAPI_ENDPOINT = "https://script.google.com/macros/s/AKfycbxaJ4Yp-xetzBJt79Wjms4t8N9_n2WAtqHYkwY5BgqrIMemqt2mAmpniZNFuddUBLRZBg/exec";
+  const CAPI_TOKEN = "acc597d93d84103ed0c5e87bf1f5481eed6548fc315c31ff00750071a5e2f58a";
+
+  function sendMetaTrackEvent(eventName, eventId, customData) {
+    try {
+      const { fbp, fbc } = getFbParams();
+      fetch(CAPI_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(Object.assign({
+          token: CAPI_TOKEN,
+          action: 'track_event',
+          eventName: eventName,
+          eventId: eventId,
+          pageUrl: window.location.href,
+          userAgent: navigator.userAgent,
+          fbp, fbc
+        }, customData || {}))
+      }).catch(function () {});
+    } catch (e) { /* التتبع ميعطّلش الموقع لو فشل */ }
+  }
+
   window.getAdSource = getAdSource;
   window.getFbParams = getFbParams;
+  window.generateEventId = generateEventId;
+  window.sendMetaTrackEvent = sendMetaTrackEvent;
   window.getCart = getCart;
   window.addToCart = addToCart;
   window.removeFromCart = removeFromCart;
