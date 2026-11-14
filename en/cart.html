@@ -326,13 +326,14 @@ src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
     const orderId = Math.floor(100000 + Math.random() * 900000);
     const govText = govCode === 'other' ? govOther : document.getElementById('fgov').selectedOptions[0].text;
 
+    const contentIds = cart.map(i => i.id).filter(Boolean);
     if (typeof fbq !== 'undefined') {
       fbq('track', 'InitiateCheckout', {
         value: total,
         currency: 'EGP',
         num_items: cartCount(),
         content_type: 'product'
-      });
+      }, { eventID: String(orderId) });
     }
 
     const itemsText = cart.map(i => {
@@ -391,7 +392,9 @@ src="https://www.facebook.com/tr?id=973146638598008&ev=PageView&noscript=1"
             website: honeypot,
             elapsedMs: Date.now() - __pageLoadedAt,
             fbp, fbc,
-            pageUrl: window.location.href
+            pageUrl: window.location.href,
+            userAgent: navigator.userAgent,
+            contentIds
           }),
           signal: controller.signal
         });
