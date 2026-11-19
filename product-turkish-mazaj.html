@@ -319,10 +319,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "قهوة تركي مزاچ 200جم",
       content_ids: ["turkish-mazaj"],
       content_type: 'product', currency: 'EGP', value: 185
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 185, currency: 'EGP', contentIds: ["turkish-mazaj"]
     });
   }
 </script>

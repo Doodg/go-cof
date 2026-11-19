@@ -303,10 +303,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "قهوة بقطع البندق 200جم",
       content_ids: ["flavored-hazelnut"],
       content_type: 'product', currency: 'EGP', value: 180
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 180, currency: 'EGP', contentIds: ["flavored-hazelnut"]
     });
   }
 </script>

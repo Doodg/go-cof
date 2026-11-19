@@ -325,10 +325,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "Special Turkish Coffee",
       content_ids: ["turkish-special"],
       content_type: 'product', currency: 'EGP', value: 220
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 220, currency: 'EGP', contentIds: ["turkish-special"]
     });
   }
 </script>

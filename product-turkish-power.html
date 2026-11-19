@@ -314,10 +314,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "تسلا باور كوفي 200جم",
       content_ids: ["turkish-power"],
       content_type: 'product', currency: 'EGP', value: 280
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 280, currency: 'EGP', contentIds: ["turkish-power"]
     });
   }
 </script>

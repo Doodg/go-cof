@@ -313,10 +313,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "بوكس يسعد صباحك",
       content_ids: ["box-morning"],
       content_type: 'product', currency: 'EGP', value: 400
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 400, currency: 'EGP', contentIds: ["box-morning"]
     });
   }
 </script>

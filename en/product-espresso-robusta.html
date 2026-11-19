@@ -313,10 +313,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "Espresso 80/20 - 200gm",
       content_ids: ["espresso-robusta"],
       content_type: 'product', currency: 'EGP', value: 225
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 225, currency: 'EGP', contentIds: ["espresso-robusta"]
     });
   }
 </script>

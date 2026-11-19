@@ -313,10 +313,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "Al-Raye' Box",
       content_ids: ["box-rayeq"],
       content_type: 'product', currency: 'EGP', value: 700
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 700, currency: 'EGP', contentIds: ["box-rayeq"]
     });
   }
 </script>
