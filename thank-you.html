@@ -142,14 +142,17 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
       (order.shipping === 0 ? "مجاني" : (order.shipping.toFixed(2) + ' جنيه'));
     document.getElementById('sumTotal').textContent = order.total.toFixed(2) + ' جنيه';
 
-    if (typeof fbq !== 'undefined') {
+    const purchaseEventId = String(order.id || orderId);
+    const purchaseFlagKey = 'tesla_purchase_sent_' + purchaseEventId;
+    if (typeof fbq !== 'undefined' && !sessionStorage.getItem(purchaseFlagKey)) {
       const numItems = order.items.reduce((sum, i) => sum + i.qty, 0);
       fbq('track', 'Purchase', {
         value: order.total,
         currency: 'EGP',
         content_type: 'product',
         num_items: numItems
-      }, { eventID: String(order.id || orderId) });
+      }, { eventID: purchaseEventId });
+      sessionStorage.setItem(purchaseFlagKey, '1');
     }
   } else {
     document.getElementById('summaryBox').style.display = 'none';

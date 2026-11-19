@@ -303,10 +303,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "Hot Chocolate - 200gm",
       content_ids: ["flavored-hotchoc"],
       content_type: 'product', currency: 'EGP', value: 155
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 155, currency: 'EGP', contentIds: ["flavored-hotchoc"]
     });
   }
 </script>

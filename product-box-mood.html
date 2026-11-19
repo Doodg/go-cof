@@ -313,10 +313,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "بوكس مزاچ",
       content_ids: ["box-mood"],
       content_type: 'product', currency: 'EGP', value: 630
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 630, currency: 'EGP', contentIds: ["box-mood"]
     });
   }
 </script>

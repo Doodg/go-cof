@@ -325,10 +325,14 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     });
   });
   if (typeof fbq !== 'undefined') {
+    const vcEventId = generateEventId();
     fbq('track', 'ViewContent', {
       content_name: "قهوة تركي بريميم",
       content_ids: ["turkish-premium"],
       content_type: 'product', currency: 'EGP', value: 280
+    }, { eventID: vcEventId });
+    sendMetaTrackEvent('ViewContent', vcEventId, {
+      value: 280, currency: 'EGP', contentIds: ["turkish-premium"]
     });
   }
 </script>
