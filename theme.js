@@ -40,7 +40,7 @@
       return (name || '؟').trim().charAt(0);
     }
 
-    function renderPage() {
+    function renderPage(scrollIntoView) {
       const start = (page - 1) * perPage;
       const pageItems = reviews.slice(start, start + perPage);
       container.innerHTML = pageItems.map(r => `
@@ -58,7 +58,8 @@
         </div>
       `).join('');
       renderPager();
-      container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // بنعمل scroll بس لما المستخدم يضغط على زرار صفحة تانية — مش أول مرة الصفحة بتتحمل
+      if (scrollIntoView) container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function pageButton(n, label) {
@@ -83,7 +84,7 @@
       pager.querySelectorAll('button[data-page]').forEach(btn => {
         btn.addEventListener('click', () => {
           const n = parseInt(btn.getAttribute('data-page'));
-          if (n >= 1 && n <= totalPages && n !== page) { page = n; renderPage(); }
+          if (n >= 1 && n <= totalPages && n !== page) { page = n; renderPage(true); }
         });
       });
     }

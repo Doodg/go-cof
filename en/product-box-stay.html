@@ -65,7 +65,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
   },
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": "4.5",
+    "ratingValue": "4.7",
     "reviewCount": "22"
   }
 }
@@ -84,7 +84,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
 </head>
 <body>
 <div class="top-fixed">
-  <div class="announce-bar">Free delivery in Cairo & Giza on orders over <span>700 EGP</span></div>
+  <div class="announce-bar">Free delivery in Cairo & Giza on orders over <span>800 EGP</span></div>
   <nav>
     <div class="nav-side">
       <a href="../product-box-stay.html" class="lang-switch" aria-label="العربية">العربية</a>
@@ -106,6 +106,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     <a href="tesla-turkish-coffee.html">Turkish Coffee</a>
     <a href="tesla-espresso.html">Espresso</a>
     <a href="tesla-flavored-coffee.html">Flavored coffee</a>
+    <a href="all-products.html">All Products</a>
   </div>
 </div>
 
@@ -121,7 +122,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
       <span class="pdp-price-old">LE 470.00</span>
       <span class="pdp-price" id="pdpPrice">LE 420.00</span>
     </div>
-    <a href="#reviews" class="pdp-rating-link"><span data-stars-avg="4.5"></span><span>22 review</span></a>
+    <a href="#reviews" class="pdp-rating-link"><span data-stars-avg="4.7"></span><span>22 review</span></a>
 
     <div class="pdp-field">
       <label>Coffee roast</label>
@@ -152,7 +153,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
 <section class="reviews-section reveal" id="reviews">
   <div class="reviews-head">
     <h2>Customer Reviews</h2>
-    <div class="reviews-avg"><span data-stars-avg="4.5"></span><strong>4.5</strong><span>(22 review)</span></div>
+    <div class="reviews-avg"><span data-stars-avg="4.7"></span><strong>4.7</strong><span>(22 review)</span></div>
     <a href="https://wa.me/201117180333?text=I'd%20like%20to%20share%20my%20feedback%20on%20Mood%20ON%20Box" target="_blank" class="write-review-btn">Write a review</a>
   </div>
   <div id="reviewsList"></div>
@@ -184,7 +185,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
         <img src="../images/turkish-special-thumb.webp" alt="Special Turkish Coffee - Tesla Coffee" loading="lazy" width="480" height="480">
       </div>
       <div class="product-card-title">Special Turkish Coffee</div>
-      <div class="product-card-price"><span class="from">From</span><span class="now">LE 110.00</span></div>
+      <div class="product-card-price"><span class="now">LE 220.00</span></div>
     </a>
     <a href="product-turkish-premium.html" class="product-card reveal">
       <div class="product-card-img-wrap">
@@ -192,7 +193,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
         <img src="../images/turkish-premium-thumb.webp" alt="Premium Turkish Coffee - Tesla Coffee" loading="lazy" width="480" height="480">
       </div>
       <div class="product-card-title">Premium Turkish Coffee</div>
-      <div class="product-card-price"><span class="from">From</span><span class="now">LE 140.00</span></div>
+      <div class="product-card-price"><span class="now">LE 280.00</span></div>
     </a>
   </div>
 </section>
@@ -306,7 +307,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
   TeslaTheme.renderReviewsPaged('reviewsList', 'reviewsPager', REVIEWS, 5);
 </script>
 <script>
-  // نستبدل placeholder <span data-stars-avg="4.5"></span> بعد ما theme.js يبقى جاهز
+  // نستبدل placeholder <span data-stars-avg="4.7"></span> بعد ما theme.js يبقى جاهز
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('[data-stars-avg]').forEach(function(el) {
       el.innerHTML = TeslaTheme.starsHTML(parseFloat(el.getAttribute('data-stars-avg'))) + el.innerHTML;

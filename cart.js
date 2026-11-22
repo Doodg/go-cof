@@ -5,7 +5,7 @@
 (function () {
   const CART_KEY = 'tesla_cart_v1';
   window.WHATSAPP_NUMBER = '201117180333';
-  window.FREE_SHIPPING_THRESHOLD = 700;
+  window.FREE_SHIPPING_THRESHOLD = 800;
   window.SHIPPING_FEE = 70; // رسوم شحن ثابتة للقاهرة والجيزة تحت حد الشحن المجاني
   window.FREE_SHIPPING_GOVS = ['cairo', 'giza']; // الشحن المجاني متاح بس للقاهرة والجيزة
 
