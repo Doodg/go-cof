@@ -93,6 +93,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
       <div class="summary-row"><span>رسوم الشحن</span><span id="cartShippingDisplay">—</span></div>
       <div class="summary-row total"><span>الإجمالي</span><span id="cartTotalDisplay">—</span></div>
       <p class="shipping-note" id="shippingNote"></p>
+      <div class="shipping-progress" id="shippingProgress"><div class="shipping-progress-fill" id="shippingProgressFill"></div></div>
     </div>
 
     <div class="checkout-form">
@@ -209,11 +210,19 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     const shippingEl = document.getElementById('cartShippingDisplay');
     const totalEl = document.getElementById('cartTotalDisplay');
     const note = document.getElementById('shippingNote');
+    const progressWrap = document.getElementById('shippingProgress');
+    const progressFill = document.getElementById('shippingProgressFill');
+
+    function setProgress(show, pct) {
+      progressWrap.classList.toggle('show', show);
+      progressFill.style.width = show ? Math.max(0, Math.min(100, pct)) + '%' : '0%';
+    }
 
     if (!govCode) {
       shippingEl.textContent = '—';
       totalEl.textContent = formatEGP(subtotal);
       note.textContent = subtotal > 0 ? "اختر المحافظة عشان تعرف رسوم الشحن" : '';
+      setProgress(false, 0);
       return;
     }
 
@@ -222,6 +231,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
       shippingEl.textContent = "هيتم تحديدها لاحقاً";
       totalEl.textContent = formatEGP(subtotal);
       note.textContent = "هنأكدلك رسوم التوصيل لمحافظتك على واتساب بعد ما تبعت الطلب";
+      setProgress(false, 0);
       return;
     }
 
@@ -230,10 +240,13 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     totalEl.textContent = formatEGP(total);
     if (subtotal > 0 && subtotal < FREE_SHIPPING_THRESHOLD) {
       note.textContent = "أضف {amount} كمان عشان تحصل على شحن مجاني (القاهرة والجيزة)".replace('{amount}', formatEGP(FREE_SHIPPING_THRESHOLD - subtotal));
+      setProgress(true, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
     } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
       note.textContent = "مبروك! طلبك يستاهل شحن مجاني 🎉";
+      setProgress(true, 100);
     } else {
       note.textContent = '';
+      setProgress(false, 0);
     }
   }
 

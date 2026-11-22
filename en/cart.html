@@ -93,6 +93,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
       <div class="summary-row"><span>Shipping</span><span id="cartShippingDisplay">—</span></div>
       <div class="summary-row total"><span>Total</span><span id="cartTotalDisplay">—</span></div>
       <p class="shipping-note" id="shippingNote"></p>
+      <div class="shipping-progress" id="shippingProgress"><div class="shipping-progress-fill" id="shippingProgressFill"></div></div>
     </div>
 
     <div class="checkout-form">
@@ -209,11 +210,19 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     const shippingEl = document.getElementById('cartShippingDisplay');
     const totalEl = document.getElementById('cartTotalDisplay');
     const note = document.getElementById('shippingNote');
+    const progressWrap = document.getElementById('shippingProgress');
+    const progressFill = document.getElementById('shippingProgressFill');
+
+    function setProgress(show, pct) {
+      progressWrap.classList.toggle('show', show);
+      progressFill.style.width = show ? Math.max(0, Math.min(100, pct)) + '%' : '0%';
+    }
 
     if (!govCode) {
       shippingEl.textContent = '—';
       totalEl.textContent = formatEGP(subtotal);
       note.textContent = subtotal > 0 ? "Select your governorate to see the delivery fee" : '';
+      setProgress(false, 0);
       return;
     }
 
@@ -222,6 +231,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
       shippingEl.textContent = "To be confirmed";
       totalEl.textContent = formatEGP(subtotal);
       note.textContent = "We'll confirm the delivery fee for your governorate via WhatsApp after you place the order";
+      setProgress(false, 0);
       return;
     }
 
@@ -230,10 +240,13 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     totalEl.textContent = formatEGP(total);
     if (subtotal > 0 && subtotal < FREE_SHIPPING_THRESHOLD) {
       note.textContent = "Add {amount} more to get free shipping (Cairo & Giza)".replace('{amount}', formatEGP(FREE_SHIPPING_THRESHOLD - subtotal));
+      setProgress(true, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
     } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
       note.textContent = "Congrats! Your order qualifies for free shipping 🎉";
+      setProgress(true, 100);
     } else {
       note.textContent = '';
+      setProgress(false, 0);
     }
   }
 
