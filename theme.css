@@ -177,6 +177,8 @@ nav {
 .hero-content h1 span { color: var(--olive); }
 .hero-content p { color: var(--text-soft); font-size: 1.02rem; line-height: 1.8; margin-bottom: 26px; max-width: 480px; }
 .hero-image img { border-radius: 14px; aspect-ratio: 4/5; object-fit: cover; box-shadow: var(--shadow); }
+.hero-trust { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; font-size: 0.85rem; color: var(--text-soft); margin-top: 20px; }
+.hero-trust span:not(:last-child)::after { content: '·'; margin-inline-start: 10px; color: var(--border); }
 
 /* ---------- Product detail page ---------- */
 .pdp-wrap {
@@ -277,6 +279,9 @@ nav {
 .summary-row.total { padding-top: 14px; }
 .summary-row.total span:last-child { font-size: 1.3rem; color: var(--olive); }
 .shipping-note { font-size: 0.8rem; color: var(--olive); margin-top: 10px; text-align: center; }
+.shipping-progress { display: none; height: 7px; border-radius: 50px; background: var(--border-lt); overflow: hidden; margin-top: 12px; }
+.shipping-progress.show { display: block; }
+.shipping-progress-fill { height: 100%; border-radius: 50px; background: var(--olive); width: 0%; transition: width .4s ease; }
 
 .form-group { margin-bottom: 18px; }
 .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 7px; }
@@ -331,6 +336,10 @@ footer.site-footer .footer-links a { color: rgba(252,251,245,0.7); text-decorati
 footer.site-footer .footer-links a:hover { color: var(--cream); }
 footer.site-footer .footer-social { display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; }
 footer.site-footer .footer-social a { color: var(--cream); }
+footer.site-footer .footer-contact { display: flex; justify-content: center; gap: 8px 20px; flex-wrap: wrap; margin-bottom: 20px; font-size: 0.86rem; }
+footer.site-footer .footer-contact a { color: rgba(252,251,245,0.7); text-decoration: none; }
+footer.site-footer .footer-contact a:hover { color: var(--cream); }
+footer.site-footer .footer-contact span { color: rgba(252,251,245,0.5); }
 footer.site-footer .footer-copy { font-size: 0.76rem; color: rgba(252,251,245,0.4); }
 
 /* ---------- WhatsApp float ---------- */
@@ -371,4 +380,8 @@ footer.site-footer .footer-copy { font-size: 0.76rem; color: rgba(252,251,245,0.
   body { padding-bottom: 76px; }
   .wa-float { bottom: 90px; width: 50px; height: 50px; }
   .wa-float svg { width: 24px; height: 24px; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px 10px; }
+  .product-card-img-wrap { margin-bottom: 10px; }
+  .product-card-title { font-size: 0.85rem; }
+  .product-card-price { font-size: 0.85rem; }
 }
