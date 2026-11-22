@@ -79,6 +79,12 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
     <a href="index.html" class="btn btn-olive">Browse Products</a>
   </div>
 
+  <div id="pendingOrderBanner" style="display:none; margin-bottom:18px; padding:14px; background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.35); border-radius:10px; text-align:center;">
+    <p style="margin:0 0 8px;">You have a previous order that wasn't confirmed as sent.</p>
+    <button type="button" id="pendingOrderRetryBtn" class="btn btn-olive" style="padding:8px 18px; font-size:0.85rem;">Retry</button>
+    <button type="button" id="pendingOrderDismissBtn" style="padding:8px 18px; font-size:0.85rem; background:none; border:1px solid var(--text-soft); color:var(--text-soft); border-radius:8px; margin-left:8px; cursor:pointer;">Dismiss</button>
+  </div>
+
   <div id="cartContent">
     <div class="cart-items" id="cartItems"></div>
 
@@ -131,6 +137,10 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
         </div>
       </div>
       <button class="btn btn-olive btn-block" id="submitBtn" onclick="submitCheckout()">Confirm Order</button>
+      <div id="sendErrorBanner" style="display:none; margin-top:14px; padding:14px; background:rgba(200,40,40,0.08); border:1px solid rgba(200,40,40,0.3); border-radius:10px; text-align:center;">
+        <p style="margin:0 0 8px;">There was a problem sending your order, tap here to send it on WhatsApp</p>
+        <a href="#" id="sendErrorWaLink" target="_blank" class="btn btn-olive" style="display:inline-block; padding:8px 18px; font-size:0.85rem;">Send order on WhatsApp</a>
+      </div>
       <p class="form-note">Your data is safe — cash on delivery only</p>
     </div>
   </div>
@@ -317,6 +327,7 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
       return;
     }
 
+    hideSendError();
     const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = "Sending...";
 
@@ -358,65 +369,175 @@ src="https://www.facebook.com/tr?id=805047072376148&ev=PageView&noscript=1"
       `Payment: ${payment}\n` +
       `Source: ${getAdSource()}`;
 
-    // الطريقة الأساسية: تسجيل الأوردر في Google Sheet. لو نجحت، الطلب يتسجل بهدوء
-    // من غير ما نفتح واتساب. مهلة قصوى 12 ثانية — لو حصل تأخير أو حجب (Adblocker
-    // وغيره)، ما ينفعش نسيب العميل واقف على "جارٍ الإرسال" للأبد.
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000);
     const { fbp, fbc } = getFbParams();
+    const orderPayload = {
+      token: ORDER_TOKEN,
+      timestamp: new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' }),
+      orderId,
+      items: itemsText,
+      numItems: cartCount(),
+      subtotal,
+      shipping: shipping === null ? "To be confirmed" : shipping,
+      total,
+      name, phone, gov: govText, address, payment,
+      pageLang: "en",
+      source: getAdSource(),
+      website: honeypot,
+      elapsedMs: Date.now() - __pageLoadedAt,
+      fbp, fbc,
+      pageUrl: window.location.href,
+      userAgent: navigator.userAgent,
+      contentIds
+    };
 
-    let sheetSaveFailed = false;
-    const sheetUrl = "https://script.google.com/macros/s/AKfycbxaJ4Yp-xetzBJt79Wjms4t8N9_n2WAtqHYkwY5BgqrIMemqt2mAmpniZNFuddUBLRZBg/exec";
-    if (!sheetUrl.startsWith('http')) {
-      // لسه معملتش Deploy لـ Google Apps Script (شوف apps-script.gs) — نروح على واتساب مباشرة
-      sheetSaveFailed = true;
-      clearTimeout(timeoutId);
-    } else {
-      try {
-        await fetch(sheetUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            token: "acc597d93d84103ed0c5e87bf1f5481eed6548fc315c31ff00750071a5e2f58a",
-            timestamp: new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' }),
-            orderId,
-            items: itemsText,
-            numItems: cartCount(),
-            subtotal,
-            shipping: shipping === null ? "To be confirmed" : shipping,
-            total,
-            name, phone, gov: govText, address, payment,
-            pageLang: "en",
-            source: getAdSource(),
-            website: honeypot,
-            elapsedMs: Date.now() - __pageLoadedAt,
-            fbp, fbc,
-            pageUrl: window.location.href,
-            userAgent: navigator.userAgent,
-            contentIds
-          }),
-          signal: controller.signal
-        });
-      } catch (e) {
-        // فشل التسجيل (Adblocker أو مشكلة شبكة) — هنفتح واتساب كخطة بديلة عشان الطلب ميضيعش
-        sheetSaveFailed = true;
-      } finally {
-        clearTimeout(timeoutId);
-      }
+    // Local backup before any send attempt, so if the tab closes or the network
+    // drops mid-request, the order stays recoverable when the customer comes back.
+    savePendingOrder(orderId, orderPayload, waMessage);
+
+    const result = await sendOrderWithRetry(orderPayload);
+
+    if (result.ok) {
+      clearPendingOrder(orderId);
+      sessionStorage.setItem('lastOrder', JSON.stringify({
+        id: result.orderId || orderId, items: cart, subtotal, shipping, total
+      }));
+      clearCart();
+      window.location.href = 'thank-you.html?id=' + (result.orderId || orderId);
+      return;
     }
 
-    if (sheetSaveFailed) {
-      window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waMessage), '_blank');
-    }
-
-    sessionStorage.setItem('lastOrder', JSON.stringify({
-      id: orderId, items: cart, subtotal, shipping, total
-    }));
-    clearCart();
-
-    window.location.href = 'thank-you.html?id=' + orderId;
+    reportFailure(orderPayload, result.reason || 'unknown');
+    showSendError(waMessage);
+    btn.disabled = false; btn.textContent = "Confirm Order";
+    isSubmitting = false;
   }
+
+  // Same Apps Script URL/token as before — still has to be sent from the browser
+  // since there's no real backend in this architecture.
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbxaJ4Yp-xetzBJt79Wjms4t8N9_n2WAtqHYkwY5BgqrIMemqt2mAmpniZNFuddUBLRZBg/exec";
+  const ORDER_TOKEN = "acc597d93d84103ed0c5e87bf1f5481eed6548fc315c31ff00750071a5e2f58a";
+
+  function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+  // Sends the order once and reads the real server response (no more no-cors),
+  // so the site actually knows whether it was saved or rejected.
+  async function sendOrderOnce(payload, timeoutMs) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(SHEET_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      const json = await res.json();
+      if (json && json.status === 'success') {
+        return { ok: true, orderId: json.orderId };
+      }
+      return { ok: false, reason: 'server_rejected: ' + JSON.stringify(json) };
+    } catch (e) {
+      return { ok: false, reason: 'network_error: ' + e.toString() };
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  // Retries up to 3 times with the same orderId on failure. The server has its
+  // own dedupe lock, so a retry can never create a duplicate order.
+  async function sendOrderWithRetry(payload) {
+    const attempts = [20000, 20000, 20000];
+    let lastResult = { ok: false, reason: 'not_attempted' };
+    for (let i = 0; i < attempts.length; i++) {
+      lastResult = await sendOrderOnce(payload, attempts[i]);
+      if (lastResult.ok) return lastResult;
+      if (i < attempts.length - 1) await sleep(2000);
+    }
+    return lastResult;
+  }
+
+  // Best-effort failure log to the sheet's "طلبات فشلت" tab.
+  function reportFailure(payload, reason) {
+    try {
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          token: ORDER_TOKEN,
+          action: 'log_failure',
+          orderId: payload.orderId,
+          reason: reason,
+          name: payload.name,
+          phone: payload.phone,
+          total: payload.total
+        })
+      }).catch(function () {});
+    } catch (e) { /* best effort only */ }
+  }
+
+  function savePendingOrder(orderId, payload, waMessage) {
+    try {
+      localStorage.setItem('tesla_pending_order_' + orderId, JSON.stringify({ payload, waMessage }));
+    } catch (e) {}
+  }
+
+  function clearPendingOrder(orderId) {
+    try { localStorage.removeItem('tesla_pending_order_' + orderId); } catch (e) {}
+  }
+
+  function showSendError(waMessage) {
+    const banner = document.getElementById('sendErrorBanner');
+    const link = document.getElementById('sendErrorWaLink');
+    link.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waMessage);
+    banner.style.display = 'block';
+    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function hideSendError() {
+    document.getElementById('sendErrorBanner').style.display = 'none';
+  }
+
+  // If a previous order failed to send and was only saved locally, surface it
+  // when the customer comes back to the cart page, and let them choose to retry.
+  function checkPendingOrders() {
+    try {
+      const keys = Object.keys(localStorage).filter(k => k.indexOf('tesla_pending_order_') === 0);
+      if (!keys.length) return;
+      const raw = localStorage.getItem(keys[0]);
+      const pending = raw ? JSON.parse(raw) : null;
+      if (!pending) { localStorage.removeItem(keys[0]); return; }
+
+      const banner = document.getElementById('pendingOrderBanner');
+      banner.style.display = 'block';
+
+      document.getElementById('pendingOrderRetryBtn').onclick = async function () {
+        const retryBtn = this;
+        retryBtn.disabled = true; retryBtn.textContent = "Sending...";
+        const result = await sendOrderWithRetry(pending.payload);
+        if (result.ok) {
+          clearPendingOrder(pending.payload.orderId);
+          sessionStorage.setItem('lastOrder', JSON.stringify({
+            id: result.orderId || pending.payload.orderId,
+            items: getCart(), subtotal: pending.payload.subtotal,
+            shipping: pending.payload.shipping, total: pending.payload.total
+          }));
+          clearCart();
+          window.location.href = 'thank-you.html?id=' + (result.orderId || pending.payload.orderId);
+        } else {
+          banner.style.display = 'none';
+          reportFailure(pending.payload, result.reason || 'unknown');
+          showSendError(pending.waMessage);
+          retryBtn.disabled = false; retryBtn.textContent = "Retry";
+        }
+      };
+      document.getElementById('pendingOrderDismissBtn').onclick = function () {
+        clearPendingOrder(pending.payload.orderId);
+        banner.style.display = 'none';
+      };
+    } catch (e) {}
+  }
+  checkPendingOrders();
 
   ['fname','fphone','fgov','faddress'].forEach(id => {
     const el = document.getElementById(id);
